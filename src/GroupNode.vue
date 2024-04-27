@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import type { NodeProps } from '@vue-flow/core';
+import { useNode, useVueFlow, type NodeProps } from '@vue-flow/core';
 import { NodeResizer } from '@vue-flow/node-resizer'
 
 const props = defineProps<NodeProps>();
 const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
+
+const self = useNode();
+const { getIntersectingNodes } = useVueFlow();
+
+function updateConnections() {
+  const nodes = getIntersectingNodes({ id: self.id });
+}
 </script>
 
 <template>
-  <NodeResizer :minWidth="100" :minHeight="30" />
+  <NodeResizer :minWidth="100" :minHeight="30" @resizeEnd="updateConnections" />
   <div class="group">{{ props.label }}</div>
 </template>
 
