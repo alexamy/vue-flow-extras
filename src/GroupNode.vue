@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNode, useVueFlow, type GraphNode, type NodeProps } from '@vue-flow/core';
 import { NodeResizer } from '@vue-flow/node-resizer'
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, toRaw } from 'vue';
 
 const props = defineProps<NodeProps>();
 const emit = defineEmits<{
@@ -19,7 +19,11 @@ function updateGroup() {
   const outer = childNodes.value
     .filter(node => !inner.includes(node));
 
-  console.log(inner, outer);
+  console.log(
+    toRaw(self.computedPosition),
+    inner.map(n => toRaw(n.computedPosition))?.[0],
+    outer.map(n => toRaw(n.computedPosition))?.[0],
+  );
 
   for(const node of outer) {
     node.parentNode = '';
