@@ -16,13 +16,18 @@ onMounted(updateGroup);
 onNodeDragStop(updateGroup);
 
 function updateGroup() {
-  const nodes = getIntersectingNodes({ id: self.id });
+  const nodes = getIntersectingNodes(self.node);
   for(const node of prevNodes.value) {
     node.parentNode = '';
+    node.position.x += self.node.position.x;
+    node.position.x += self.node.position.x;
   }
   for(const node of nodes) {
+    if(node.parentNode = self.id) continue;
     node.parentNode = self.id;
     node.expandParent = true;
+    node.position.x -= self.node.position.x;
+    node.position.x -= self.node.position.x;
   }
   prevNodes.value = nodes;
 }
