@@ -15,14 +15,15 @@ const { getIntersectingNodes } = useVueFlow();
 // onMounted(updateGroup);
 
 function updateGroup() {
-  const nodes = getIntersectingNodes(self);
+  const inner = getIntersectingNodes(self);
+  const outer = childNodes.value
+    .filter(node => !inner.includes(node));
 
-  for(const node of childNodes.value) {
-    if(nodes.includes(node)) continue;
+  for(const node of outer) {
     node.parentNode = '';
   }
 
-  for(const node of nodes) {
+  for(const node of inner) {
     if(node.parentNode = self.id) continue;
     node.parentNode = self.id;
     node.expandParent = true;
@@ -30,7 +31,7 @@ function updateGroup() {
     // node.position.x -= self.position.x;
   }
 
-  childNodes.value = nodes;
+  childNodes.value = inner;
 }
 </script>
 
