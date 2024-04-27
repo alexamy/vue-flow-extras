@@ -12,6 +12,8 @@ const props = defineProps<NodeProps>();
 
 <style scoped>
 .group {
+  height: 100%;
+  width: 100%;
   padding: 4px 10px;
   background: #82ccdd;
   border: 1px solid #3c6382;
