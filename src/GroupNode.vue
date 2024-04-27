@@ -8,7 +8,7 @@ const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
 
-const self = useNode();
+const { node: self } = useNode();
 const prevNodes = ref<GraphNode[]>([]);
 const { getIntersectingNodes, onNodeDragStop } = useVueFlow();
 
@@ -16,18 +16,19 @@ onMounted(updateGroup);
 onNodeDragStop(updateGroup);
 
 function updateGroup() {
-  const nodes = getIntersectingNodes(self.node);
+  const nodes = getIntersectingNodes(self);
   for(const node of prevNodes.value) {
     node.parentNode = '';
-    node.position.x += self.node.position.x;
-    node.position.x += self.node.position.x;
+    node.position.x += self.position.x;
+    node.position.x += self.position.x;
   }
   for(const node of nodes) {
     if(node.parentNode = self.id) continue;
+
     node.parentNode = self.id;
     node.expandParent = true;
-    node.position.x -= self.node.position.x;
-    node.position.x -= self.node.position.x;
+    node.position.x -= self.position.x;
+    node.position.x -= self.position.x;
   }
   prevNodes.value = nodes;
 }
