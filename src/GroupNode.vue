@@ -8,11 +8,12 @@ const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
 
-// onMounted(updateGroup);
-
 const self = useNode();
 const prevNodes = ref<GraphNode[]>([]);
-const { getIntersectingNodes } = useVueFlow();
+const { getIntersectingNodes, onNodeDragStop } = useVueFlow();
+
+onMounted(updateGroup);
+onNodeDragStop(updateGroup);
 
 function updateGroup() {
   const nodes = getIntersectingNodes({ id: self.id });

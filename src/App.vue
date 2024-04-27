@@ -15,6 +15,8 @@ const edges = ref([
 
 const { onPaneReady, fitView, onNodeDragStop } = useVueFlow();
 
+onNodeDragStop(console.log);
+
 onPaneReady(() => fitView());
 </script>
 
