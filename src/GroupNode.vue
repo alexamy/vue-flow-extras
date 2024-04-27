@@ -3,6 +3,9 @@ import type { NodeProps } from '@vue-flow/core';
 import { NodeResizer } from '@vue-flow/node-resizer'
 
 const props = defineProps<NodeProps>();
+const emit = defineEmits<{
+  updateNodeInternals: [],
+}>();
 </script>
 
 <template>

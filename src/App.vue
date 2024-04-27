@@ -13,7 +13,11 @@ const edges = ref([
   { id: 'e1-2', source: '1', target: '2' },
 ]);
 
-const { onPaneReady, fitView } = useVueFlow();
+const { onPaneReady, fitView, onNodeDragStop } = useVueFlow();
+
+onNodeDragStop((props) => {
+  console.log(props);
+});
 
 onPaneReady(() => fitView());
 </script>
