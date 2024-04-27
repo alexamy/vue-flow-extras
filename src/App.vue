@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 const nodes = ref([
   { id: '1', type: 'input', label: 'Node 1', position: { x: 0, y: 0 }},
-  { id: '2', type: 'input', label: 'Node 2', position: { x: 50, y: 50 }},
+  { id: '2', type: 'output', label: 'Node 2', position: { x: 50, y: 50 }},
 ]);
 
 const edges = ref([
@@ -21,7 +21,7 @@ onPaneReady(() => fitView());
     <VueFlow
       :nodes="nodes"
       :edges="edges"
-      :default-viewport="{ zoom: 1.5 }"
+      :default-viewport="{ zoom: 1.0 }"
       :min-zoom="0.2"
       :max-zoom="4"
     >
@@ -31,7 +31,7 @@ onPaneReady(() => fitView());
 
 <style scoped>
 .graph {
-  width: 600px;
+  width: 400px;
   height: 600px;
 }
 </style>
