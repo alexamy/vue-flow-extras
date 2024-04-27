@@ -8,7 +8,7 @@ const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
 
-onMounted(updateGroup);
+// onMounted(updateGroup);
 
 const self = useNode();
 const prevNodes = ref<GraphNode[]>([]);
@@ -20,7 +20,7 @@ function updateGroup() {
     node.parentNode = '';
   }
   for(const node of nodes) {
-    node.parentNode = node.id;
+    node.parentNode = self.id;
     node.expandParent = true;
   }
   prevNodes.value = nodes;
