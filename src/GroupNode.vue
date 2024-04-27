@@ -8,16 +8,16 @@ const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
 
-onMounted(updateConnections);
+onMounted(updateGroup);
 
 const self = useNode();
 const prevNodes = ref<GraphNode[]>([]);
 const { getIntersectingNodes } = useVueFlow();
 
-function updateConnections() {
+function updateGroup() {
   const nodes = getIntersectingNodes({ id: self.id });
-  for(const child of prevNodes.value) {
-    child.parentNode = '';
+  for(const node of prevNodes.value) {
+    node.parentNode = '';
   }
   for(const node of nodes) {
     node.parentNode = node.id;
@@ -28,7 +28,7 @@ function updateConnections() {
 </script>
 
 <template>
-  <NodeResizer :minWidth="100" :minHeight="30" @resizeEnd="updateConnections" />
+  <NodeResizer :minWidth="100" :minHeight="30" @resizeEnd="updateGroup" />
   <div class="group">{{ props.label }}</div>
 </template>
 
