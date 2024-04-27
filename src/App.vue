@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { ref } from 'vue';
+import GroupNode from './GroupNode.vue';
 
 const nodes = ref([
-  { id: '1', type: 'input', label: 'Node 1', position: { x: 0, y: 0 }},
+  { id: '1', type: 'input', label: 'Node 1', position: { x: 20, y: 20 }},
   { id: '2', type: 'output', label: 'Node 2', position: { x: 50, y: 50 }},
+  { id: '3', type: 'group', label: 'Group 1', position: { x: 0, y: 0 } },
 ]);
 
 const edges = ref([
@@ -25,13 +27,16 @@ onPaneReady(() => fitView());
       :min-zoom="0.2"
       :max-zoom="4"
     >
+      <template #node-group="groupNodeProps">
+        <GroupNode v-bind="groupNodeProps" />
+      </template>
     </VueFlow>
   </div>
 </template>
 
 <style scoped>
 .graph {
-  width: 400px;
+  width: 300px;
   height: 600px;
 }
 </style>
