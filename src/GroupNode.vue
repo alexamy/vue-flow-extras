@@ -18,6 +18,8 @@ const emit = defineEmits<{
   height: 100%;
   width: 100%;
   padding: 4px 10px;
+  background: rgba(130, 204, 221, 0.2);
+  color: white;
   border: 1px solid #3c6382;
   border-radius: 3px;
   font-size: 13px;
