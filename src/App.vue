@@ -6,7 +6,7 @@ import GroupNode from './GroupNode.vue';
 const nodes = ref([
   { id: '1', type: 'input', label: 'Node 1', position: { x: 100, y: 100 }},
   { id: '2', type: 'output', label: 'Node 2', position: { x: 150, y: 150 }},
-  { id: '3', type: 'group', label: 'Group 1', position: { x: 70, y: 60 } },
+  { id: '3', type: 'group', label: 'Group 1', position: { x: 20, y: 20 } },
 ]);
 
 const edges = ref([
