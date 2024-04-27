@@ -19,6 +19,8 @@ function updateGroup() {
   const outer = childNodes.value
     .filter(node => !inner.includes(node));
 
+  console.log(inner, outer);
+
   for(const node of outer) {
     node.parentNode = '';
   }

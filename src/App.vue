@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { VueFlow, useVueFlow } from '@vue-flow/core';
+import { Background } from '@vue-flow/background'
 import { ref } from 'vue';
 import GroupNode from './GroupNode.vue';
 
@@ -29,6 +30,7 @@ onPaneReady(() => fitView());
       :min-zoom="0.2"
       :max-zoom="4"
     >
+      <Background />
       <template #node-group="groupNodeProps">
         <GroupNode v-bind="groupNodeProps" />
       </template>
