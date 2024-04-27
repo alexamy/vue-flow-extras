@@ -40,7 +40,8 @@ onPaneReady(() => fitView());
 
 <style scoped>
 .graph {
-  width: 300px;
-  height: 600px;
+  width: 350px;
+  height: 650px;
+  border: 1px solid grey;
 }
 </style>
