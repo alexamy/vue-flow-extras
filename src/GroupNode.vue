@@ -1,17 +1,29 @@
 <script setup lang="ts">
-import { useNode, useVueFlow, type NodeProps } from '@vue-flow/core';
+import { useNode, useVueFlow, type GraphNode, type NodeProps } from '@vue-flow/core';
 import { NodeResizer } from '@vue-flow/node-resizer'
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<NodeProps>();
 const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
 
+onMounted(updateConnections);
+
 const self = useNode();
+const prevNodes = ref<GraphNode[]>([]);
 const { getIntersectingNodes } = useVueFlow();
 
 function updateConnections() {
   const nodes = getIntersectingNodes({ id: self.id });
+  for(const child of prevNodes.value) {
+    child.parentNode = '';
+  }
+  for(const node of nodes) {
+    node.parentNode = node.id;
+    node.expandParent = true;
+  }
+  prevNodes.value = nodes;
 }
 </script>
 
