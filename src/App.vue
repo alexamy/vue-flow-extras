@@ -4,9 +4,9 @@ import { ref } from 'vue';
 import GroupNode from './GroupNode.vue';
 
 const nodes = ref([
-  { id: '1', type: 'input', label: 'Node 1', position: { x: 20, y: 20 }},
-  { id: '2', type: 'output', label: 'Node 2', position: { x: 50, y: 50 }},
-  { id: '3', type: 'group', label: 'Group 1', position: { x: 0, y: 0 } },
+  { id: '1', type: 'input', label: 'Node 1', position: { x: 100, y: 100 }},
+  { id: '2', type: 'output', label: 'Node 2', position: { x: 150, y: 150 }},
+  { id: '3', type: 'group', label: 'Group 1', position: { x: 70, y: 60 } },
 ]);
 
 const edges = ref([
@@ -38,8 +38,8 @@ onPaneReady(() => fitView());
 
 <style scoped>
 .graph {
-  width: 350px;
-  height: 650px;
+  width: 900px;
+  height: 700px;
   border: 1px solid grey;
 }
 </style>

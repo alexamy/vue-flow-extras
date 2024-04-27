@@ -9,28 +9,28 @@ const emit = defineEmits<{
 }>();
 
 const { node: self } = useNode();
-const prevNodes = ref<GraphNode[]>([]);
-const { getIntersectingNodes, onNodeDragStop } = useVueFlow();
+const childNodes = ref<GraphNode[]>([]);
+const { getIntersectingNodes } = useVueFlow();
 
-onMounted(updateGroup);
-onNodeDragStop(updateGroup);
+// onMounted(updateGroup);
 
 function updateGroup() {
   const nodes = getIntersectingNodes(self);
-  for(const node of prevNodes.value) {
+
+  for(const node of childNodes.value) {
+    if(nodes.includes(node)) continue;
     node.parentNode = '';
-    node.position.x += self.position.x;
-    node.position.x += self.position.x;
   }
+
   for(const node of nodes) {
     if(node.parentNode = self.id) continue;
-
     node.parentNode = self.id;
     node.expandParent = true;
-    node.position.x -= self.position.x;
-    node.position.x -= self.position.x;
+    // node.position.x -= self.position.x;
+    // node.position.x -= self.position.x;
   }
-  prevNodes.value = nodes;
+
+  childNodes.value = nodes;
 }
 </script>
 
@@ -44,7 +44,7 @@ function updateGroup() {
   height: 100%;
   width: 100%;
   padding: 4px 10px;
-  background: rgba(130, 204, 221, 0.2);
+  background: rgba(130, 204, 221, 0.3);
   color: white;
   border: 1px solid #3c6382;
   border-radius: 3px;
