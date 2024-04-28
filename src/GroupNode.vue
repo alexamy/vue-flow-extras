@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNode, useVueFlow, type GraphNode, type NodeProps } from '@vue-flow/core';
 import { NodeResizer } from '@vue-flow/node-resizer'
-import { nextTick, ref, toRaw } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<NodeProps>();
 const emit = defineEmits<{
@@ -12,7 +12,10 @@ const { node: self } = useNode();
 const childNodes = ref<GraphNode[]>([]);
 const { getIntersectingNodes, updateNodeInternals } = useVueFlow();
 
-// onMounted(updateGroup);
+onMounted(() => {
+  updateNodeInternals();
+  updateGroup();
+});
 
 async function updateGroup() {
   const inner = getIntersectingNodes(self);
@@ -27,6 +30,11 @@ async function updateGroup() {
 
   for(const node of inner) {
     if(node.parentNode === self.id) continue;
+    if(node.type === 'group') {
+      console.warn('Inner groups are not supported');
+      continue;
+    }
+    console.log(node);
     node.parentNode = self.id;
     node.expandParent = true;
     node.position.x -= self.position.x;
