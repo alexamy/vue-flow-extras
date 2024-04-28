@@ -8,10 +8,10 @@ export function useGroupNode() {
 
   onMounted(() => {
     updateNodeInternals();
-    updateGroup();
+    onGroupResize();
   });
 
-  async function updateGroup() {
+  async function onGroupResize() {
     const intersecting = getIntersectingNodes(self);
     const { outer, inner } = splitNodes(self.id, childNodes.value, intersecting);
 
@@ -32,7 +32,7 @@ export function useGroupNode() {
     childNodes.value = inner;
   }
 
-  return { childNodes, updateGroup } as const;
+  return { childNodes, onGroupResize } as const;
 }
 
 function splitNodes(

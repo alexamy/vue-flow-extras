@@ -8,11 +8,11 @@ const emit = defineEmits<{
   updateNodeInternals: [],
 }>();
 
-const { updateGroup } = useGroupNode();
+const { onGroupResize } = useGroupNode();
 </script>
 
 <template>
-  <NodeResizer :minWidth="100" :minHeight="30" @resizeEnd="updateGroup" />
+  <NodeResizer :minWidth="100" :minHeight="30" @resizeEnd="onGroupResize" />
   <div class="group">{{ props.label }}</div>
 </template>
 
