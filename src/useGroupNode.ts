@@ -33,57 +33,54 @@ export function useGroupNode() {
     const { outer, inner } = splitNodes(childNodes.value, intersecting);
 
     for(const node of outer) {
-      excludeNode(self, node);
+      excludeNode(node);
     }
     for(const node of inner) {
-      includeNode(self, node);
+      includeNode(node);
     }
+  }
+
+  function splitNodes(nodes: GraphNode[], intersecting: GraphNode[]) {
+    const outer: GraphNode[] = nodes
+      .filter(node => !intersecting.includes(node));
+
+    const inner: GraphNode[] = intersecting
+      .filter(node => node.type !== 'group');
+
+    return { inner, outer } as const;
+  }
+
+  function onGroupDrag(self: GraphNode, intersections?: GraphNode[]) {
+    intersections
+      ?.filter(node => node.type !== 'group')
+      ?.filter(node => node.parentNode !== self.id)
+      ?.forEach(node => includeNode(node));
+  }
+
+  function onNodeDrag(self: GraphNode, node: GraphNode, intersections?: GraphNode[]) {
+    const isInGroup = node.parentNode === self.id;
+    const intersectsWithGroup = intersections
+      ?.find(node => node.id === self.id);
+
+    if(isInGroup && !intersectsWithGroup) {
+      excludeNode(node);
+    } else if(!isInGroup && intersectsWithGroup) {
+      includeNode(node);
+    }
+  }
+
+  function excludeNode(node: GraphNode) {
+    node.parentNode = '';
+    node.position.x += self.position.x;
+    node.position.y += self.position.y;
+  }
+
+  function includeNode(node: GraphNode) {
+    if(node.parentNode === self.id) return;
+    node.parentNode = self.id;
+    node.position.x -= self.position.x;
+    node.position.y -= self.position.y;
   }
 
   return { childNodes, onGroupResize } as const;
-}
-
-function onGroupDrag(self: GraphNode, intersections?: GraphNode[]) {
-  intersections
-    ?.filter(node => node.type !== 'group')
-    ?.filter(node => node.parentNode !== self.id)
-    ?.forEach(node => includeNode(self, node));
-}
-
-function onNodeDrag(self: GraphNode, node: GraphNode, intersections?: GraphNode[]) {
-  const isInGroup = node.parentNode === self.id;
-  const intersectsWithGroup = intersections
-    ?.find(node => node.id === self.id);
-
-  if(isInGroup && !intersectsWithGroup) {
-    excludeNode(self, node);
-  } else if(!isInGroup && intersectsWithGroup) {
-    includeNode(self, node);
-  }
-}
-
-function excludeNode(self: GraphNode, node: GraphNode) {
-  node.parentNode = '';
-  node.position.x += self.position.x;
-  node.position.y += self.position.y;
-}
-
-function includeNode(self: GraphNode, node: GraphNode) {
-  if(node.parentNode === self.id) return;
-  node.parentNode = self.id;
-  node.position.x -= self.position.x;
-  node.position.y -= self.position.y;
-}
-
-function splitNodes(
-  nodes: GraphNode[],
-  intersecting: GraphNode[]
-) {
-  const outer: GraphNode[] = nodes
-    .filter(node => !intersecting.includes(node));
-
-  const inner: GraphNode[] = intersecting
-    .filter(node => node.type !== 'group');
-
-  return { inner, outer } as const;
 }
