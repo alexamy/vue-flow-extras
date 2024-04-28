@@ -21,10 +21,11 @@ export function useGroupNode() {
   });
 
   onNodeDragStop(({ node, intersections }) => {
+    if(!intersections) return;
     if(node.id === self.id) {
-      onGroupDrag(node, intersections);
+      onGroupDrag(intersections);
     } else {
-      onNodeDrag(self, node, intersections);
+      onNodeDrag(node, intersections);
     }
   });
 
@@ -50,14 +51,14 @@ export function useGroupNode() {
     return { inner, outer } as const;
   }
 
-  function onGroupDrag(self: GraphNode, intersections?: GraphNode[]) {
+  function onGroupDrag(intersections: GraphNode[]) {
     intersections
-      ?.filter(node => node.type !== 'group')
-      ?.filter(node => node.parentNode !== self.id)
-      ?.forEach(node => includeNode(node));
+      .filter(node => node.type !== 'group')
+      .filter(node => node.parentNode !== self.id)
+      .forEach(node => includeNode(node));
   }
 
-  function onNodeDrag(self: GraphNode, node: GraphNode, intersections?: GraphNode[]) {
+  function onNodeDrag(node: GraphNode, intersections: GraphNode[]) {
     const isInGroup = node.parentNode === self.id;
     const intersectsWithGroup = intersections
       ?.find(node => node.id === self.id);
