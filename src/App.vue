@@ -8,6 +8,7 @@ const nodes = ref<Node[]>([
   { id: '1', type: 'input', label: 'Node 1', position: { x: 200, y: 200 }},
   { id: '2', type: 'output', label: 'Node 2', position: { x: 250, y: 250 }},
   { id: '3', type: 'group', label: 'Group 1', position: { x: 150, y: 150 } },
+  { id: '4', type: 'group', label: 'Group 2', position: { x: 100, y: 100 } },
 ]);
 
 const edges = ref([
