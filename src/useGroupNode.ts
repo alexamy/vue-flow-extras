@@ -1,14 +1,19 @@
 import { useNode, useVueFlow, type GraphNode } from '@vue-flow/core';
-import { onMounted, ref, toRaw } from 'vue';
+import { computed, onMounted, ref, toRaw } from 'vue';
 
 export function useGroupNode() {
   const { node: self } = useNode();
-  const childNodes = ref<GraphNode[]>([]);
   const {
     getIntersectingNodes,
     updateNodeInternals,
     onNodeDragStop,
+    nodes,
   } = useVueFlow();
+
+  const childNodes = computed(() => {
+    return nodes.value
+      .filter(node => node.parentNode === self.id);
+  });
 
   onMounted(() => {
     updateNodeInternals();
@@ -35,7 +40,6 @@ export function useGroupNode() {
     }
 
     updateNodeInternals();
-    childNodes.value = inner;
   }
 
   return { childNodes, onGroupResize } as const;
