@@ -79,7 +79,7 @@ export function useGroupNode() {
   }
 
   function includeNode(node: GraphNode) {
-    if(node.parentNode === group.id) return;
+    if(node.parentNode) return;
     node.parentNode = group.id;
     node.position.x -= group.position.x;
     node.position.y -= group.position.y;
