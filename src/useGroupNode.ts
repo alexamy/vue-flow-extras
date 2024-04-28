@@ -84,6 +84,7 @@ export function useGroupNode() {
     node.position.x -= group.position.x;
     node.position.y -= group.position.y;
 
+    // resize group to fit new node
     node.expandParent = true;
     updateNodeInternals();
     node.expandParent = false;
