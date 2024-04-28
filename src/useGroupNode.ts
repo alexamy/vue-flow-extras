@@ -13,7 +13,7 @@ export function useGroupNode() {
 
   async function updateGroup() {
     const intersecting = getIntersectingNodes(self);
-    const { outer, inner } = splitNodes(childNodes.value, intersecting);
+    const { outer, inner } = splitNodes(self.id, childNodes.value, intersecting);
 
     for(const node of outer) {
       node.parentNode = '';
@@ -35,13 +35,17 @@ export function useGroupNode() {
   return { childNodes, updateGroup } as const;
 }
 
-function splitNodes(nodes: GraphNode[], intersecting: GraphNode[]) {
+function splitNodes(
+  parentId: string,
+  nodes: GraphNode[],
+  intersecting: GraphNode[]
+) {
   const outer: GraphNode[] = nodes
     .filter(node => !intersecting.includes(node));
 
   const inner: GraphNode[] = intersecting
     .filter(node => {
-      const isOwned = nodes.includes(node);
+      const isOwned = node.parentNode === parentId;
       const isGroup = node.type === 'group';
       if(isGroup) {
         console.warn('Inner groups are not supported');
