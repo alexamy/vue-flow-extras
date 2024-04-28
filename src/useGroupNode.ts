@@ -16,16 +16,15 @@ export function useGroupNode() {
   });
 
   onNodeDragStop(({ node, intersections }) => {
-    if(node.type === 'group') return;
-
+    const isGroup = node.type === 'group';
     const isInGroup = node.parentNode === self.id;
     const intersectsWithGroup = intersections
       ?.find(node => node.id === self.id);
 
-    if(isInGroup && !intersectsWithGroup) {
+    if(!isGroup && isInGroup && !intersectsWithGroup) {
       // can be dragged out of a group -> exclude
       excludeNode(self, node);
-    } else if(!isInGroup && intersectsWithGroup) {
+    } else if(!isGroup && !isInGroup && intersectsWithGroup) {
       // can be dragged into a group -> include
       includeNode(self, node);
     }
