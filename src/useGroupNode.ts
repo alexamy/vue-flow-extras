@@ -25,6 +25,7 @@ export function useGroupNode() {
     if(node.id === group.id) {
       onGroupDrag(intersections);
     } else {
+      if(node.type === 'group') return;
       onNodeDrag(node, intersections);
     }
   });
