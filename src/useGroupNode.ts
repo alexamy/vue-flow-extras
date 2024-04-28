@@ -16,20 +16,30 @@ export function useGroupNode() {
   });
 
   onNodeDragStop(({ node, intersections }) => {
-    const isGroup = node.type === 'group';
+    const isCurrentGroup = node.id === self.id;
+
+    // add new nodes to group
+    if(isCurrentGroup) {
+      intersections
+        ?.filter(node => node.type !== 'group')
+        ?.filter(node => node.parentNode !== self.id)
+        ?.forEach(node => includeNode(self, node));
+      return;
+    }
+
     const isInGroup = node.parentNode === self.id;
     const intersectsWithGroup = intersections
       ?.find(node => node.id === self.id);
 
-    if(!isGroup && isInGroup && !intersectsWithGroup) {
+    // can be dragged inside a group -> ignore
+
+    if(isInGroup && !intersectsWithGroup) {
       // can be dragged out of a group -> exclude
       excludeNode(self, node);
-    } else if(!isGroup && !isInGroup && intersectsWithGroup) {
+    } else if(!isInGroup && intersectsWithGroup) {
       // can be dragged into a group -> include
       includeNode(self, node);
     }
-
-    // can be dragged inside a group -> ignore
   });
 
   async function onGroupResize() {
