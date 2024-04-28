@@ -81,6 +81,10 @@ export function useGroupNode() {
     node.parentNode = group.id;
     node.position.x -= group.position.x;
     node.position.y -= group.position.y;
+
+    node.expandParent = true;
+    updateNodeInternals();
+    node.expandParent = false;
   }
 
   return { childNodes, onGroupResize } as const;
