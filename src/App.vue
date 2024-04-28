@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { VueFlow, useVueFlow } from '@vue-flow/core';
+import { VueFlow, useVueFlow, type Node } from '@vue-flow/core';
 import { Background } from '@vue-flow/background'
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import GroupNode from './GroupNode.vue';
 
-const nodes = ref([
+const nodes = ref<Node[]>([
   { id: '1', type: 'input', label: 'Node 1', position: { x: 200, y: 200 }},
   { id: '2', type: 'output', label: 'Node 2', position: { x: 250, y: 250 }},
-  { id: '3', type: 'group', label: 'Group 1', position: { x: 120, y: 120 } },
+  { id: '3', type: 'group', label: 'Group 1', position: { x: 140, y: 140 } },
 ]);
 
 const edges = ref([
   { id: 'e1-2', source: '1', target: '2' },
 ]);
 
-const { onPaneReady, fitView, onNodeDragStop } = useVueFlow();
-
-onNodeDragStop(console.log);
+const { onPaneReady, fitView } = useVueFlow();
 
 onPaneReady(() => fitView());
 </script>

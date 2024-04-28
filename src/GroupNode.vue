@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNode, useVueFlow, type GraphNode, type NodeProps } from '@vue-flow/core';
 import { NodeResizer } from '@vue-flow/node-resizer'
-import { nextTick, onMounted, ref, toRaw } from 'vue';
+import { nextTick, ref, toRaw } from 'vue';
 
 const props = defineProps<NodeProps>();
 const emit = defineEmits<{
@@ -10,33 +10,28 @@ const emit = defineEmits<{
 
 const { node: self } = useNode();
 const childNodes = ref<GraphNode[]>([]);
-const { getIntersectingNodes } = useVueFlow();
+const { getIntersectingNodes, updateNodeInternals } = useVueFlow();
 
 // onMounted(updateGroup);
 
-function updateGroup() {
+async function updateGroup() {
   const inner = getIntersectingNodes(self);
-  const outer = childNodes.value
+  const outer: GraphNode[] = childNodes.value
     .filter(node => !inner.includes(node));
-
-  console.log(
-    toRaw(self.computedPosition),
-    inner.map(n => toRaw(n.computedPosition))?.[0],
-    outer.map(n => toRaw(n.computedPosition))?.[0],
-  );
 
   for(const node of outer) {
     node.parentNode = '';
   }
 
   for(const node of inner) {
-    if(node.parentNode = self.id) continue;
+    if(node.parentNode === self.id) continue;
     node.parentNode = self.id;
     node.expandParent = true;
-    // node.position.x -= self.position.x;
-    // node.position.x -= self.position.x;
+    node.position.x -= self.position.x;
+    node.position.y -= self.position.y;
   }
 
+  updateNodeInternals();
   childNodes.value = inner;
 }
 </script>
