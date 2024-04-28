@@ -13,25 +13,13 @@ export function useGroupNode() {
 
   async function updateGroup() {
     const intersecting = getIntersectingNodes(self);
-
-    const outer: GraphNode[] = childNodes.value
-      .filter(node => !intersecting.includes(node));
+    const { outer, inner } = splitNodes(childNodes.value, intersecting);
 
     for(const node of outer) {
       node.parentNode = '';
       node.position.x += self.position.x;
       node.position.y += self.position.y;
     }
-
-    const inner = intersecting
-      .filter(node => {
-        const isOwned = childNodes.value.includes(node);
-        const isGroup = node.type === 'group';
-        if(isGroup) {
-          console.warn('Inner groups are not supported');
-        }
-        return !isOwned && !isGroup;
-      });
 
     for(const node of inner) {
       node.parentNode = self.id;
@@ -45,4 +33,21 @@ export function useGroupNode() {
   }
 
   return { childNodes, updateGroup } as const;
+}
+
+function splitNodes(nodes: GraphNode[], intersecting: GraphNode[]) {
+  const outer: GraphNode[] = nodes
+    .filter(node => !intersecting.includes(node));
+
+  const inner: GraphNode[] = intersecting
+    .filter(node => {
+      const isOwned = nodes.includes(node);
+      const isGroup = node.type === 'group';
+      if(isGroup) {
+        console.warn('Inner groups are not supported');
+      }
+      return !isOwned && !isGroup;
+    });
+
+  return { inner, outer } as const;
 }
