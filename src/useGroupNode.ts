@@ -31,13 +31,9 @@ export function useGroupNode() {
     const intersectsWithGroup = intersections
       ?.find(node => node.id === self.id);
 
-    // can be dragged inside a group -> ignore
-
     if(isInGroup && !intersectsWithGroup) {
-      // can be dragged out of a group -> exclude
       excludeNode(self, node);
     } else if(!isInGroup && intersectsWithGroup) {
-      // can be dragged into a group -> include
       includeNode(self, node);
     }
   });
