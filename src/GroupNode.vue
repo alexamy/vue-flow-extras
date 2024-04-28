@@ -21,6 +21,8 @@ async function updateGroup() {
 
   for(const node of outer) {
     node.parentNode = '';
+    node.position.x += self.position.x;
+    node.position.y += self.position.y;
   }
 
   for(const node of inner) {
