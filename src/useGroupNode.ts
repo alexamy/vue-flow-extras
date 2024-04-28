@@ -38,8 +38,6 @@ export function useGroupNode() {
     for(const node of inner) {
       includeNode(self, node);
     }
-
-    updateNodeInternals();
   }
 
   return { childNodes, onGroupResize } as const;
