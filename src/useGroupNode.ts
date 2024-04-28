@@ -1,5 +1,5 @@
 import { useNode, useVueFlow, type GraphNode } from '@vue-flow/core';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRaw } from 'vue';
 
 export function useGroupNode() {
   const { node: self } = useNode();
@@ -13,7 +13,7 @@ export function useGroupNode() {
 
   async function onGroupResize() {
     const intersecting = getIntersectingNodes(self);
-    const { outer, inner } = splitNodes(self.id, childNodes.value, intersecting);
+    const { outer, inner } = splitNodes(childNodes.value, intersecting);
 
     for(const node of outer) {
       node.parentNode = '';
@@ -22,6 +22,7 @@ export function useGroupNode() {
     }
 
     for(const node of inner) {
+      if(node.parentNode === self.id) continue;
       node.parentNode = self.id;
       node.expandParent = true;
       node.position.x -= self.position.x;
@@ -36,7 +37,6 @@ export function useGroupNode() {
 }
 
 function splitNodes(
-  parentId: string,
   nodes: GraphNode[],
   intersecting: GraphNode[]
 ) {
@@ -45,12 +45,11 @@ function splitNodes(
 
   const inner: GraphNode[] = intersecting
     .filter(node => {
-      const isOwned = node.parentNode === parentId;
       const isGroup = node.type === 'group';
       if(isGroup) {
         console.warn('Inner groups are not supported');
       }
-      return !isOwned && !isGroup;
+      return !isGroup;
     });
 
   return { inner, outer } as const;
