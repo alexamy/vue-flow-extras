@@ -1,8 +1,8 @@
 import { useNode, useVueFlow, type GraphNode } from '@vue-flow/core';
-import { computed, onMounted, ref, toRaw } from 'vue';
+import { computed, onMounted } from 'vue';
 
 export function useGroupNode() {
-  const { node: self } = useNode();
+  const { node: group } = useNode();
   const {
     getIntersectingNodes,
     updateNodeInternals,
@@ -12,7 +12,7 @@ export function useGroupNode() {
 
   const childNodes = computed(() => {
     return nodes.value
-      .filter(node => node.parentNode === self.id);
+      .filter(node => node.parentNode === group.id);
   });
 
   onMounted(() => {
@@ -22,15 +22,15 @@ export function useGroupNode() {
 
   onNodeDragStop(({ node, intersections }) => {
     if(!intersections) return;
-    if(node.id === self.id) {
+    if(node.id === group.id) {
       onGroupDrag(intersections);
     } else {
       onNodeDrag(node, intersections);
     }
   });
 
-  async function onGroupResize() {
-    const intersecting = getIntersectingNodes(self);
+  function onGroupResize() {
+    const intersecting = getIntersectingNodes(group);
     const { outer, inner } = splitNodes(childNodes.value, intersecting);
 
     for(const node of outer) {
@@ -54,14 +54,14 @@ export function useGroupNode() {
   function onGroupDrag(intersections: GraphNode[]) {
     intersections
       .filter(node => node.type !== 'group')
-      .filter(node => node.parentNode !== self.id)
-      .forEach(node => includeNode(node));
+      .filter(node => node.parentNode !== group.id)
+      .forEach(includeNode);
   }
 
   function onNodeDrag(node: GraphNode, intersections: GraphNode[]) {
-    const isInGroup = node.parentNode === self.id;
+    const isInGroup = node.parentNode === group.id;
     const intersectsWithGroup = intersections
-      ?.find(node => node.id === self.id);
+      .some(node => node.id === group.id);
 
     if(isInGroup && !intersectsWithGroup) {
       excludeNode(node);
@@ -72,15 +72,15 @@ export function useGroupNode() {
 
   function excludeNode(node: GraphNode) {
     node.parentNode = '';
-    node.position.x += self.position.x;
-    node.position.y += self.position.y;
+    node.position.x += group.position.x;
+    node.position.y += group.position.y;
   }
 
   function includeNode(node: GraphNode) {
-    if(node.parentNode === self.id) return;
-    node.parentNode = self.id;
-    node.position.x -= self.position.x;
-    node.position.y -= self.position.y;
+    if(node.parentNode === group.id) return;
+    node.parentNode = group.id;
+    node.position.x -= group.position.x;
+    node.position.y -= group.position.y;
   }
 
   return { childNodes, onGroupResize } as const;
