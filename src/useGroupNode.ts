@@ -22,22 +22,15 @@ export function useGroupNode() {
     const intersectsWithGroup = intersections
       ?.find(node => node.id === self.id);
 
-    // node that is already inside the group
-    if(isInGroup) {
-      // can be dragged inside a group -> ignore
-      if(intersectsWithGroup) {
-        return;
-      // can be dragged out of a group -> exclude
-      } else {
-        excludeNode(self, node);
-      }
-    } else {
-      // can be dragged into a group -> include
-      if(intersectsWithGroup) {
-        includeNode(self, node);
-      }
-    }
+    // can be dragged inside a group -> ignore
 
+    if(isInGroup && !intersectsWithGroup) {
+      // can be dragged out of a group -> exclude
+      excludeNode(self, node);
+    } else if(!isInGroup && intersectsWithGroup) {
+      // can be dragged into a group -> include
+      includeNode(self, node);
+    }
   });
 
   async function onGroupResize() {
