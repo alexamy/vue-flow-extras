@@ -16,25 +16,10 @@ export function useGroupNode() {
   });
 
   onNodeDragStop(({ node, intersections }) => {
-    const isCurrentGroup = node.id === self.id;
-
-    // add new nodes to group
-    if(isCurrentGroup) {
-      intersections
-        ?.filter(node => node.type !== 'group')
-        ?.filter(node => node.parentNode !== self.id)
-        ?.forEach(node => includeNode(self, node));
-      return;
-    }
-
-    const isInGroup = node.parentNode === self.id;
-    const intersectsWithGroup = intersections
-      ?.find(node => node.id === self.id);
-
-    if(isInGroup && !intersectsWithGroup) {
-      excludeNode(self, node);
-    } else if(!isInGroup && intersectsWithGroup) {
-      includeNode(self, node);
+    if(node.id === self.id) {
+      onGroupDrag(node, intersections);
+    } else {
+      onNodeDrag(self, node, intersections);
     }
   });
 
@@ -54,6 +39,25 @@ export function useGroupNode() {
   }
 
   return { childNodes, onGroupResize } as const;
+}
+
+function onGroupDrag(self: GraphNode, intersections?: GraphNode[]) {
+  intersections
+    ?.filter(node => node.type !== 'group')
+    ?.filter(node => node.parentNode !== self.id)
+    ?.forEach(node => includeNode(self, node));
+}
+
+function onNodeDrag(self: GraphNode, node: GraphNode, intersections?: GraphNode[]) {
+  const isInGroup = node.parentNode === self.id;
+  const intersectsWithGroup = intersections
+    ?.find(node => node.id === self.id);
+
+  if(isInGroup && !intersectsWithGroup) {
+    excludeNode(self, node);
+  } else if(!isInGroup && intersectsWithGroup) {
+    includeNode(self, node);
+  }
 }
 
 function excludeNode(self: GraphNode, node: GraphNode) {
