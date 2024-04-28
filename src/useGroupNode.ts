@@ -15,16 +15,18 @@ export function useGroupNode() {
     const intersecting = getIntersectingNodes(self);
     const { outer, inner } = splitNodes(childNodes.value, intersecting);
 
+    // remove nodes what are not intersecting anymore
     for(const node of outer) {
       node.parentNode = '';
       node.position.x += self.position.x;
       node.position.y += self.position.y;
     }
 
+    // add nodes what are intersecting
     for(const node of inner) {
+      // skip update if already in group
       if(node.parentNode === self.id) continue;
       node.parentNode = self.id;
-      node.expandParent = true;
       node.position.x -= self.position.x;
       node.position.y -= self.position.y;
     }
@@ -44,13 +46,7 @@ function splitNodes(
     .filter(node => !intersecting.includes(node));
 
   const inner: GraphNode[] = intersecting
-    .filter(node => {
-      const isGroup = node.type === 'group';
-      if(isGroup) {
-        console.warn('Inner groups are not supported');
-      }
-      return !isGroup;
-    });
+    .filter(node => node.type !== 'group');
 
   return { inner, outer } as const;
 }
