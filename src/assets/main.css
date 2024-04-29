@@ -1,11 +1,11 @@
 @import './base.css';
 @import '@vue-flow/core/dist/style.css';
 @import '@vue-flow/core/dist/theme-default.css';
+@import '@vue-flow/node-resizer/dist/style.css';
 
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
 }
 

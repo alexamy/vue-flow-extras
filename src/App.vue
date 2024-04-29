@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { VueFlow, useVueFlow } from '@vue-flow/core';
-import { ref } from 'vue';
+import { VueFlow, useVueFlow, type Node } from '@vue-flow/core';
+import { Background } from '@vue-flow/background'
+import { ref, toRaw } from 'vue';
+import GroupNode from './GroupNode.vue';
 
-const nodes = ref([
-  { id: '1', type: 'input', label: 'Node 1', position: { x: 0, y: 0 }},
-  { id: '2', type: 'input', label: 'Node 2', position: { x: 50, y: 50 }},
+const nodes = ref<Node[]>([
+  { id: '1', type: 'input', label: 'Node 1', position: { x: 200, y: 200 }},
+  { id: '2', type: 'output', label: 'Node 2', position: { x: 250, y: 260 }},
+  { id: '3', type: 'group', label: 'Group 3', position: { x: 150, y: 150 } },
+  { id: '4', type: 'group', label: 'Group 4', position: { x: 150, y: 100 } },
 ]);
 
 const edges = ref([
@@ -21,17 +25,22 @@ onPaneReady(() => fitView());
     <VueFlow
       :nodes="nodes"
       :edges="edges"
-      :default-viewport="{ zoom: 1.5 }"
+      :default-viewport="{ zoom: 1.0 }"
       :min-zoom="0.2"
       :max-zoom="4"
     >
+      <Background />
+      <template #node-group="groupNodeProps">
+        <GroupNode v-bind="groupNodeProps" />
+      </template>
     </VueFlow>
   </div>
 </template>
 
 <style scoped>
 .graph {
-  width: 600px;
-  height: 600px;
+  width: 900px;
+  height: 700px;
+  border: 1px solid grey;
 }
 </style>
