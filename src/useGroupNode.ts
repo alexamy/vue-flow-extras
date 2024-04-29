@@ -20,51 +20,37 @@ export function useGroupNode() {
     onGroupResize();
   });
 
-  // this is executed in each group!
   onNodeDragStop(({ node, intersections }) => {
     if(!intersections) return;
     if(node.id === group.id) {
       onGroupDrag(intersections);
-    } else if(node.type !== 'group') {
+    } else if(node.type !== group.type) {
       onNodeDrag(node, intersections);
     }
   });
 
   function onGroupResize() {
     const intersections = getIntersectingNodes(group);
-    const { outer, inner } = splitNodes(intersections);
-
-    for(const node of outer) {
-      excludeNode(node);
-    }
-    for(const node of inner) {
-      includeNode(node);
-    }
-  }
-
-  function splitNodes(intersections: GraphNode[]) {
-    const outer: GraphNode[] = childNodes.value
-      .filter(node => !intersections.includes(node));
-
-    const inner: GraphNode[] = intersections
-      .filter(node => node.type !== 'group');
-
-    return { inner, outer } as const;
+    const outer = childNodes.value.filter((node) => !intersections.includes(node));
+    const inner = intersections.filter((node) => node.type !== group.type);
+    outer.forEach(excludeNode);
+    inner.forEach(includeNode);
   }
 
   function onGroupDrag(intersections: GraphNode[]) {
     intersections
-      .filter(node => node.type !== 'group')
+      .filter(node => node.type !== group.type)
       .filter(node => node.parentNode !== group.id)
       .forEach(includeNode);
   }
 
   function onNodeDrag(node: GraphNode, intersections: GraphNode[]) {
     const isInGroup = node.parentNode === group.id;
-    const intersectsWithGroup = intersections
-      .some(node => node.id === group.id);
+    const intersectsWithGroup = intersections.some((node) => node.id === group.id);
 
-    if(isInGroup && !intersectsWithGroup) {
+    if(isInGroup && intersectsWithGroup) {
+      resizeGroupByNode(node);
+    } else if(isInGroup && !intersectsWithGroup) {
       excludeNode(node);
     } else if(!isInGroup && intersectsWithGroup) {
       includeNode(node);
@@ -78,12 +64,14 @@ export function useGroupNode() {
   }
 
   function includeNode(node: GraphNode) {
-    if(node.parentNode) return;
+    if (node.parentNode) return;
     node.parentNode = group.id;
     node.position.x -= group.position.x;
     node.position.y -= group.position.y;
+    resizeGroupByNode(node);
+  }
 
-    // resize group to fit new node
+  function resizeGroupByNode(node: GraphNode) {
     node.expandParent = true;
     updateNodeInternals();
     node.expandParent = false;
